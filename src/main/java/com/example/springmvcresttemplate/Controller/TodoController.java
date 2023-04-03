@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.DataInput;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,10 +29,12 @@ public class TodoController {
     @GetMapping("/")
     public ModelAndView homePage() throws ParseException {
         ModelAndView modelAndView = new ModelAndView("index");
+        if (storedTodoResponseList==null){
         List<TodoResponse> todoResponseList = todoRestTemplateService.getAllTodo();
         storedTodoResponseList = todoResponseList;
-        modelAndView.addObject("todoList", todoResponseList);
-        log.info("TODOS: ---> "+ todoResponseList);
+        }
+        modelAndView.addObject("todoList", storedTodoResponseList);
+        log.info("TODOS: ---> "+ storedTodoResponseList);
         return modelAndView;
     }
 
@@ -46,15 +46,17 @@ public class TodoController {
         return modelAndView;
     }
 
-    //TODO: FIX POST MAPPING
     @PostMapping("/edit")
-    public String saveEdit(@ModelAttribute("todo") TodoResponse todoResponse) {
-        log.info("todo from form"+ todoResponse);
+    public ModelAndView saveEdit(@ModelAttribute("todo") TodoResponse todoResponse) throws ParseException {
         TodoRequest todoRequest = new TodoRequest();
         todoRequest.setCompleted(todoResponse.getCompleted());
         todoRequest.setTodo(todoResponse.getTodo());
-        String todoResponse1 = todoRestTemplateService.editTodo(todoRequest, todoResponse.getId());
-        log.info("Updated Todo: ---> "+todoResponse1);
-        return "redirect:/";
+        //Update our storedTodoResponseList instead of running an API call again
+        TodoResponse todoResponse1 = todoRestTemplateService.editTodo(todoRequest, todoResponse.getId());
+        storedTodoResponseList = storedTodoResponseList.stream().map(todos-> Objects.equals(todos.getId(), todoResponse1.getId())?todoResponse1:todos)
+                .collect(Collectors.toList());
+        ModelAndView modelAndView = new ModelAndView("index")
+                .addObject("todoList", storedTodoResponseList);
+        return modelAndView;
     }
 }

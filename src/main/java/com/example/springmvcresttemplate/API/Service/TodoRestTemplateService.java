@@ -9,7 +9,7 @@ import java.util.List;
 public interface TodoRestTemplateService {
     List<TodoResponse> getAllTodo() throws ParseException;
 
-    String editTodo(TodoRequest todoRequest, Long id);
+    TodoResponse editTodo(TodoRequest todoRequest, Long id) throws ParseException;
 
     TodoResponse getATodo(Long id);
 }

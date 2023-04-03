@@ -3,6 +3,8 @@ package com.example.springmvcresttemplate.API.ServiceImpl;
 import com.example.springmvcresttemplate.API.Service.TodoRestTemplateService;
 import com.example.springmvcresttemplate.API.TodoRequest;
 import com.example.springmvcresttemplate.API.TodoResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +34,21 @@ public class TodoRestTemplateServiceImpl implements TodoRestTemplateService {
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
         System.out.println("Json response:-->"+response.getBody());
-        List<TodoResponse> todoResponseList = (List<TodoResponse>) new JSONParser(response.getBody())
-                .object().get("todos");
+        List<TodoResponse> todoResponseList = new ObjectMapper().convertValue(new JSONParser(response.getBody())
+                .object().get("todos"), new TypeReference<List<TodoResponse>>() {
+        });
         return todoResponseList;
     }
 
     @Override
-    public String editTodo(TodoRequest todoRequest, Long id){
+    public TodoResponse editTodo(TodoRequest todoRequest, Long id) throws ParseException {
         String url = "https://dummyjson.com/todos/"+id;
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity httpEntity = new HttpEntity(todoRequest, httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, String.class);
-        return response.getBody();
+        HttpEntity<TodoRequest> httpEntity = new HttpEntity(todoRequest, httpHeaders);
+        ResponseEntity<TodoResponse> response = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, TodoResponse.class);
+        TodoResponse todoResponse =  new ObjectMapper().convertValue(response.getBody(), TodoResponse.class);
+        return todoResponse;
     }
 
     @Override
