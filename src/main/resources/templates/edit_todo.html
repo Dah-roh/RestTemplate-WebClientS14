@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wetin-ToDo</title>
+</head>
+<body>
+<form action="/edit" method="post" th:object="${todo}">
+  Todo:     <input type="text" th:field="*{todo}">
+  Completed:<input type="text" th:field="*{completed}">
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{userId}">
+  <button>Update your Todo</button>
+</form>
+</body>
+</html>

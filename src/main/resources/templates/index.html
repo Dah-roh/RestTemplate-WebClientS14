@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wetin-ToDo</title>
+</head>
+<body>
+
+<table th:each="todo : ${todoList}">
+    <tr>
+
+        <td th:text="${todo.todo}"></td>
+        <td th:text="${todo.completed}"></td>
+        <td><a th:href="@{/edit(id= ${todo.id})}">Edit</a></td>
+        <td><a th:href="@{/delete(id= ${todo.id})}">Delete</a></td>
+
+    </tr>
+</table>
+
+</body>
+</html>
