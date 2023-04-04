@@ -14,4 +14,6 @@ public interface TodoRestTemplateService {
     TodoResponse getATodo(Long id);
 
     TodoResponse postATodo(TodoRequest todoRequest);
+
+    void deleteWetinTodo(Long id);
 }

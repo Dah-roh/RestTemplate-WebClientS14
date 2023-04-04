@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class TodoController {
 
     private TodoRestTemplateService todoRestTemplateService;
-    private static List<TodoResponse> storedTodoResponseList;
+    public static List<TodoResponse> storedTodoResponseList;
     @Autowired
     public TodoController(TodoRestTemplateService todoRestTemplateService) {
         this.todoRestTemplateService = todoRestTemplateService;
@@ -72,4 +72,11 @@ public class TodoController {
         storedTodoResponseList.add(todoRestTemplateService.postATodo(todoRequest));
         return new ModelAndView("index").addObject("todoList", storedTodoResponseList);
     }
+
+    @GetMapping("/delete")
+    public String deleteWetinTodo(@RequestParam("id") Long id){
+        todoRestTemplateService.deleteWetinTodo(id);
+        return "redirect:/";
+    }
+
 }

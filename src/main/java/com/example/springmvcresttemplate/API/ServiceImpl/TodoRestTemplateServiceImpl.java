@@ -3,6 +3,7 @@ package com.example.springmvcresttemplate.API.ServiceImpl;
 import com.example.springmvcresttemplate.API.Service.TodoRestTemplateService;
 import com.example.springmvcresttemplate.API.TodoRequest;
 import com.example.springmvcresttemplate.API.TodoResponse;
+import com.example.springmvcresttemplate.Controller.TodoController;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.json.JSONParser;
@@ -15,10 +16,13 @@ import org.springframework.http.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoRestTemplateServiceImpl implements TodoRestTemplateService {
     private RestTemplate restTemplate;
+    private TodoController todoController;
 
     @Autowired
     public TodoRestTemplateServiceImpl() {
@@ -56,9 +60,13 @@ public class TodoRestTemplateServiceImpl implements TodoRestTemplateService {
         //find todo that matches with 'id'
         //return todo;
 
-  //use collection STREAM to find our to-do with given id from
+        //use collection STREAM to find our to-do with given id from
         // storedTodoResponseList and return a single Todo;
-        return null;
+
+//        Solution:
+        return TodoController.storedTodoResponseList
+                .stream().filter(todo -> Objects.equals(todo.getId(), id)).findAny()
+                .orElseThrow(()-> new NullPointerException("no such todo "));
     }
 
 
@@ -72,5 +80,12 @@ public class TodoRestTemplateServiceImpl implements TodoRestTemplateService {
         return response.getBody();
     }
 
+
+    @Override
+    public void deleteWetinTodo(Long id){
+      TodoResponse todoResponse =TodoController.storedTodoResponseList
+                      .stream().filter(todo -> Objects.equals(todo.getId(), id)).findAny().orElseThrow(()-> new NullPointerException("no such todo "));
+        TodoController.storedTodoResponseList.remove(todoResponse);
+    }
 
 }
