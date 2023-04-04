@@ -47,17 +47,30 @@ public class TodoRestTemplateServiceImpl implements TodoRestTemplateService {
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<TodoRequest> httpEntity = new HttpEntity(todoRequest, httpHeaders);
         ResponseEntity<TodoResponse> response = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, TodoResponse.class);
-        TodoResponse todoResponse =  new ObjectMapper().convertValue(response.getBody(), TodoResponse.class);
-        return todoResponse;
+        return new ObjectMapper().convertValue(response.getBody(), TodoResponse.class);
     }
 
     @Override
     public TodoResponse getATodo(Long id){
-        String url = "https://dummyjson.com/todos/"+id;
+        //GET storedTodoResponseList
+        //find todo that matches with 'id'
+        //return todo;
+
+  //use collection STREAM to find our to-do with given id from
+        // storedTodoResponseList and return a single Todo;
+        return null;
+    }
+
+
+    @Override
+    public TodoResponse postATodo(TodoRequest todoRequest){
+        String url = "https://dummyjson.com/todos/add";
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
-        ResponseEntity<TodoResponse> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, TodoResponse.class);
+        HttpEntity<TodoRequest> httpEntity = new HttpEntity<TodoRequest>(todoRequest, httpHeaders);
+        ResponseEntity<TodoResponse> response = restTemplate.exchange(url, HttpMethod.POST, httpEntity, TodoResponse.class);
         return response.getBody();
     }
+
+
 }

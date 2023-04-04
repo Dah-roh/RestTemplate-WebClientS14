@@ -12,4 +12,6 @@ public interface TodoRestTemplateService {
     TodoResponse editTodo(TodoRequest todoRequest, Long id) throws ParseException;
 
     TodoResponse getATodo(Long id);
+
+    TodoResponse postATodo(TodoRequest todoRequest);
 }

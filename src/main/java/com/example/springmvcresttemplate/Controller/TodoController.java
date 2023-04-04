@@ -59,4 +59,17 @@ public class TodoController {
                 .addObject("todoList", storedTodoResponseList);
         return modelAndView;
     }
+
+
+    @GetMapping("/add")
+    public ModelAndView postATodo(){
+        return new ModelAndView("add_todo").addObject("todo", new TodoRequest());
+    }
+
+    @PostMapping("/add")
+    public ModelAndView postWetinTodo(@ModelAttribute("todo") TodoRequest todoRequest){
+        todoRequest.setUserId(48l);
+        storedTodoResponseList.add(todoRestTemplateService.postATodo(todoRequest));
+        return new ModelAndView("index").addObject("todoList", storedTodoResponseList);
+    }
 }

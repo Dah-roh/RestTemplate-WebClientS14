@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Wetin-Todo</title>
+</head>
+<body>
+<form action="/add" method="post" th:object="${todo}">
+  Todo:     <input type="text" th:field="*{todo}">
+  Completed:<input type="text" th:field="*{completed}">
+  <button>Create Wetin-Todo</button>
+</form>
+
+</body>
+</html>
